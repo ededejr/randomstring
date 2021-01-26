@@ -6,6 +6,7 @@ import (
 	"strings"
 )
 
+// Log and error message and exit the program
 func failOnError(err error, msg string) {
 	if err != nil {
 		log.Fatalf("%s: %s", msg, err)
@@ -19,6 +20,14 @@ type characterTypes struct {
 	Number  string
 	Special string
 	All     string
+}
+
+// Make a `contains` function which determines
+// if a substring is included in a pattern
+func makePatternContainsFunc(pattern string) func(string) bool {
+	return func(substring string) bool {
+		return strings.Contains(pattern, substring)
+	}
 }
 
 /*
@@ -42,28 +51,29 @@ func RandomString(pattern string, length int) string {
 	types.All = types.Lower + types.Upper + types.Number + types.Special
 
 	dictionary := ""
+	patternContains := makePatternContainsFunc(pattern)
 
-	if strings.Contains(pattern, "a") {
-		dictionary += types.Lower
-	}
-
-	if strings.Contains(pattern, "A") {
-		dictionary += types.Upper
-	}
-
-	if strings.Contains(pattern, "0") {
-		dictionary += types.Number
-	}
-
-	if strings.Contains(pattern, "!") {
-		dictionary += types.Special
-	}
-
-	if strings.Contains(pattern, "*") {
+	if patternContains("*") {
 		dictionary = types.All
+	} else {
+		if patternContains("a") {
+			dictionary += types.Lower
+		}
+
+		if patternContains("A") {
+			dictionary += types.Upper
+		}
+
+		if patternContains("0") {
+			dictionary += types.Number
+		}
+
+		if patternContains("!") {
+			dictionary += types.Special
+		}
 	}
 
-	var bytes = make([]byte, length)
+	bytes := make([]byte, length)
 	_, err := rand.Read(bytes)
 	failOnError(err, "Could not successfully read bytes.")
 	for k, v := range bytes {
