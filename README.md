@@ -1,5 +1,7 @@
-# Randomstring in Go
-First package in Go for generating random strings with a given pattern and length. Inspired by [randomatic](https://github.com/jonschlinkert/randomatic)
+# Generating Random Strings in Go
+> *Inspired by [randomatic](https://github.com/jonschlinkert/randomatic)*
+
+First package in Go for generating random strings with a given pattern and length. 
 
 ## Usage
 * Generate a string of length 10 consisting of only numeric characters: `RandomString("0", 10)`
