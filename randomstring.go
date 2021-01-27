@@ -30,6 +30,22 @@ func makePatternContainsFunc(pattern string) func(string) bool {
 	}
 }
 
+// Returns a retriver function which returns
+// The set of characters
+func getCharacterRetriver() func() characterTypes {
+	characters := characterTypes{
+		Lower:   "abcdefghijklmnopqrstuvwxyz",
+		Upper:   "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+		Number:  "0123456789",
+		Special: `~!@#$%^&()_+-={}[];\',.`,
+	}
+	characters.All = characters.Lower + characters.Upper + characters.Number + characters.Special
+
+	return func() characterTypes {
+		return characters
+	}
+}
+
 /*
 RandomString generates a random string
 specifying a given pattern and length.
@@ -42,34 +58,27 @@ Patterns:
 	- *: All characters allowed
 */
 func RandomString(pattern string, length int) string {
-	types := characterTypes{
-		Lower:   "abcdefghijklmnopqrstuvwxyz",
-		Upper:   "ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-		Number:  "0123456789",
-		Special: `~!@#$%^&()_+-={}[];\',.`,
-	}
-	types.All = types.Lower + types.Upper + types.Number + types.Special
-
+	characters := getCharacterRetriver()()
 	dictionary := ""
 	patternContains := makePatternContainsFunc(pattern)
 
 	if patternContains("*") {
-		dictionary = types.All
+		dictionary = characters.All
 	} else {
 		if patternContains("a") {
-			dictionary += types.Lower
+			dictionary += characters.Lower
 		}
 
 		if patternContains("A") {
-			dictionary += types.Upper
+			dictionary += characters.Upper
 		}
 
 		if patternContains("0") {
-			dictionary += types.Number
+			dictionary += characters.Number
 		}
 
 		if patternContains("!") {
-			dictionary += types.Special
+			dictionary += characters.Special
 		}
 	}
 
