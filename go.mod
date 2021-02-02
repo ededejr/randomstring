@@ -1,3 +1,3 @@
-module dxede/randomstring
+module github.com/dxede/randomstring
 
 go 1.15
